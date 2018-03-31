@@ -184,19 +184,29 @@
 <script>
 
   var fireballSize = 22;
+
+  //FireballSpeed
   var fireballSpeed = function(left) {
-    return <!--  Незнаю как описать задание из ТЗ -->
+    if(left) {
+      return 5;
+    }
+    return 2;
   };
   var wizardSpeed = 3;
   var wizardWidth = 70;
+
+  //WizardHeight
   var getWizardHeight = function() {
     return 1.337 * wizardWidth;
   };
+
+  //WizardMove
   var getWIzardX = function(width) {
-    return (width - wizardWidth / 2);
+    return (width - wizardWidth / 2) / 2;
   };
-  var getWizardY = function() {
-    return (height / 3) - getWizardHeight(wizardWidth);
+
+  var getWizardY = function(height) {
+    return (height / 3) - getWizardHeight();
   };
 
 </script>
