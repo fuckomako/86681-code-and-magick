@@ -1,56 +1,78 @@
 'use strict';
 
 window.renderStatistics = function (ctx, names, times) {
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(110, 20, 420, 270);
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(100, 10, 420, 270);
+  var CANVAS_INIT_X = 100;
+  var CANVAS_INIT_Y = 10;
+  var CANVAS_SHADOW_INIT_X = 110;
+  var CANVAS_SHADOW_INIT_Y = 20;
+  var CANVAS_WIDTH = 420;
+  var CANVAS_HEIGHT = 270;
+  var CANVAS_PADDING_X = 20;
+  var CANVAS_PADDING_Y = 30;
 
-  ctx.fillStyle = 'black';
+  var textInitX = CANVAS_INIT_X + CANVAS_PADDING_X;
+  var textInitY = CANVAS_INIT_Y + CANVAS_PADDING_Y;
+  var lineIndent = 20;
+
+  ctx.fillStyle = ('rgba(0, 0, 0, 0.7)');
+  ctx.fillRect(CANVAS_SHADOW_INIT_X, CANVAS_SHADOW_INIT_Y, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+  ctx.fillStyle = ('#fff');
+  ctx.fillRect(CANVAS_INIT_X, CANVAS_INIT_Y, CANVAS_WIDTH, CANVAS_HEIGHT);
+
   ctx.font = '16px PT Mono';
-  ctx.textBaseline = 'hanging';
-  ctx.fillText('Ура вы победили!', 120, 30);
-  ctx.fillText('Список результатов:', 120, 50);
+  ctx.fillStyle = ('#000');
+  ctx.fillText('Ура вы победили!', textInitX, textInitY);
+  ctx.fillText('Список результатов:', textInitX, textInitY + lineIndent);
 
-  var max = getMaxElement(times);
+  var getMaxNumber = function (array) {
+    var max = -1;
 
-  var histogramHeight = 160;
-  var step = histogramHeight / (max - 0);
+    for (var i = 0; i < array.length; i++) {
+      var value = array[i];
+      if (value > max) {
+        max = value;
+      }
+    }
 
-  var columnWidth = 40;
+    return max;
+  };
+
+  var histogramHeight = 150;
+  var step = histogramHeight / (getMaxNumber(times) - 0);
+  var barWidth = 40;
   var indent = 50;
-  var initialX = 140;
-  var initialY = 100;
-  var histogramMargin = 5;
-  var scoreOffset = 18;
+  var histogramInitX = CANVAS_INIT_X + CANVAS_PADDING_X;
+  var histogramInitY = CANVAS_HEIGHT - CANVAS_PADDING_Y;
+  var lineHeight = 24;
+  var playerBarColor = 'rgba(255, 0, 0, 1)';
+
+  var getRandomOpacity = function () {
+    var opacity = Math.round(Math.random() * 10) / 10;
+
+    if (opacity === 0) {
+      opacity = 0.1;
+    }
+
+    if (opacity === 1) {
+      opacity = 0.9;
+    }
+    return opacity;
+  };
 
   for (var i = 0; i < times.length; i++) {
-    ctx.fillText(Math.floor(times[i]), initialX + indent * i + columnWidth * i, initialY + histogramHeight - times[i] * step - scoreOffset);
-    ctx.fillText(names[i], initialX + indent * i + columnWidth * i, initialY + histogramHeight + histogramMargin);
-  }
+    var barColor = 'rgba(0, 0, 255,' + getRandomOpacity() + ')';
+    var result = Math.round(times[i]);
 
-  rectsDraw(times, names, ctx, indent, columnWidth, initialY, histogramHeight, step, initialX);
-};
+    ctx.fillStyle = barColor;
 
-function rectsDraw(times, names, ctx, indent, columnWidth, initialY, histogramHeight, step, initialX) {
-  for (var i = 0; i < times.length; i++) {
     if (names[i] === 'Вы') {
-      ctx.fillStyle = 'rgba(255,0,0,1)';
-    } else {
-      ctx.fillStyle = 'rgba(0,0,255' + Math.floor(Math.random()) + ')';
+      ctx.fillStyle = playerBarColor;
     }
-    ctx.fillRect(initialX + indent * i + columnWidth * i, initialY + histogramHeight - times[i] * step, columnWidth, times[i] * step);
-  }
-}
 
-function getMaxElement(arr) {
-  var max = -1;
-
-  for (var i = 0; i < arr.length; i++) {
-    var time = arr[i];
-    if (time > max) {
-      max = time;
-    }
+    ctx.fillRect(histogramInitX + (barWidth + indent) * i, histogramInitY, barWidth, times[i] * step * (-1));
+    ctx.fillStyle = '#000';
+    ctx.fillText(names[i], histogramInitX + (barWidth + indent) * i, histogramInitY + lineHeight);
+    ctx.fillText(result, histogramInitX + (barWidth + indent) * i, histogramInitY - lineHeight / 2 - times[i] * step);
   }
-  return max;
-}
+};
