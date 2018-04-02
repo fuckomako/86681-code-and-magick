@@ -47,8 +47,7 @@ window.renderStatistics = function (ctx, names, times) {
   var histogramInitY = CANVAS_HEIGHT - CANVAS_PADDING_Y;
 
   var getRandomOpacity = function () {
-    var opacity = 'rgba(0,0,255,' + Math.random().toFixed(1) + ')';
-    return opacity;
+    return 'rgba(0,0,255,' + Math.random().toFixed(1) + ')';
   };
 
   for (var i = 0; i < times.length; i++) {
