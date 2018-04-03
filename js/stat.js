@@ -1,68 +1,60 @@
 'use strict';
 
-var CANVAS_INIT_X = 100;
-var CANVAS_INIT_Y = 10;
-var CANVAS_SHADOW_INIT_X = 110;
-var CANVAS_SHADOW_INIT_Y = 20;
-var CANVAS_WIDTH = 420;
-var CANVAS_HEIGHT = 270;
-var CANVAS_PADDING_X = 20;
-var CANVAS_PADDING_Y = 30;
-var LINE_INDENT = 20;
-var HISTOGRAM_HEIGHT = 150;
+var CLOUD_WIDTH = 420;
+var CLOUD_HEIGHT = 270;
+var CLOUD_X = 100;
+var CLOUD_Y = 10;
+var BAR_HEIGHT = 150;
 var BAR_WIDTH = 40;
-var INDENT = 50;
-var LINE_HEIGHT = 24;
-var PLAYER_BAR_COLOR = 'rgba(255, 0, 0, 1)';
+var LEFT_INDENT = 30;
+var DISTANCE = 50;
+
+var getRandomOpacity = function () {
+  return 'rgba(0,0,255,' + Math.random().toFixed(1) + ')';
+};
+
+var drawCloud = function (ctx, x, y, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
+};
+
+var drawText = function (ctx, x, y, color) {
+  ctx.fillStyle = color;
+  ctx.font = '16px PT Mono';
+  ctx.fillText('Ура Вы победили!', x + LEFT_INDENT, y + 30);
+  ctx.fillText('Список результатов:', x + LEFT_INDENT, y + 50);
+};
+
+var getMaxElement = function (arr) {
+  var maxElement = arr[0];
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] > maxElement) {
+      maxElement = arr[i];
+    }
+  }
+  return maxElement;
+};
+
+var drawBarChart = function (ctx, times, names, x, y) {
+  var maxTime = getMaxElement(times);
+  for (var i = 0; i < names.length; i++) {
+    ctx.fillStyle = '#000';
+    ctx.fillText(names[i], x + LEFT_INDENT + (BAR_WIDTH + DISTANCE) * i, y + 250);
+    ctx.fillText(Math.round(times[i]), x + LEFT_INDENT + (BAR_WIDTH + DISTANCE) * i, (y + 220) - (BAR_HEIGHT * times[i]) / maxTime);
+    ctx.beginPath();
+    ctx.moveTo(x + LEFT_INDENT + (BAR_WIDTH + DISTANCE) * i, y + 230);
+    ctx.lineTo(x + LEFT_INDENT + BAR_WIDTH + (BAR_WIDTH + DISTANCE) * i, y + 230);
+    ctx.lineTo(x + LEFT_INDENT + BAR_WIDTH + (BAR_WIDTH + DISTANCE) * i, (y + 230) - (BAR_HEIGHT * times[i] / maxTime));
+    ctx.lineTo(x + LEFT_INDENT + (BAR_WIDTH + DISTANCE) * i, (y + 230) - (BAR_HEIGHT * times[i] / maxTime));
+    ctx.closePath();
+    ctx.fillStyle = names[i] === 'Вы' ? 'rgba(255, 0, 0, 1)' : getRandomOpacity();
+    ctx.fill();
+  }
+};
 
 window.renderStatistics = function (ctx, names, times) {
-
-  var textInitX = CANVAS_INIT_X + CANVAS_PADDING_X;
-  var textInitY = CANVAS_INIT_Y + CANVAS_PADDING_Y;
-
-  ctx.fillStyle = ('rgba(0, 0, 0, 0.7)');
-  ctx.fillRect(CANVAS_SHADOW_INIT_X, CANVAS_SHADOW_INIT_Y, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-  ctx.fillStyle = ('#fff');
-  ctx.fillRect(CANVAS_INIT_X, CANVAS_INIT_Y, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-  ctx.font = '16px PT Mono';
-  ctx.fillStyle = ('#000');
-  ctx.fillText('Ура вы победили!', textInitX, textInitY);
-  ctx.fillText('Список результатов:', textInitX, textInitY + LINE_INDENT);
-
-  var getMaxNumber = function (array) {
-    var max = -1;
-    for (var i = 0; i < array.length; i++) {
-      var value = array[i];
-      if (value > max) {
-        max = value;
-      }
-    }
-    return max;
-  };
-
-  var step = HISTOGRAM_HEIGHT / (getMaxNumber(times) - 0);
-  var histogramInitX = CANVAS_INIT_X + CANVAS_PADDING_X;
-  var histogramInitY = CANVAS_HEIGHT - CANVAS_PADDING_Y;
-
-  var getRandomOpacity = function () {
-    return 'rgba(0,0,255,' + Math.random().toFixed(1) + ')';
-  };
-
-  for (var i = 0; i < times.length; i++) {
-    var barColor = getRandomOpacity();
-    var result = Math.round(times[i]);
-
-    ctx.fillStyle = barColor;
-
-    if (names[i] === 'Вы') {
-      ctx.fillStyle = PLAYER_BAR_COLOR;
-    }
-
-    ctx.fillRect(histogramInitX + (BAR_WIDTH + INDENT) * i, histogramInitY, BAR_WIDTH, times[i] * step * (-1));
-    ctx.fillStyle = '#000';
-    ctx.fillText(names[i], histogramInitX + (BAR_WIDTH + INDENT) * i, histogramInitY + LINE_HEIGHT);
-    ctx.fillText(result, histogramInitX + (BAR_WIDTH + INDENT) * i, histogramInitY - LINE_HEIGHT / 2 - times[i] * step);
-  }
+  drawCloud(ctx, CLOUD_X + 10, CLOUD_Y + 10, 'rgba(0, 0, 0, 0.3)');
+  drawCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
+  drawText(ctx, CLOUD_X, CLOUD_Y, '#000');
+  drawBarChart(ctx, times, names, CLOUD_X, CLOUD_Y);
 };
