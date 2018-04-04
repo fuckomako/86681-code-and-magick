@@ -13,8 +13,7 @@ var similarListElement = document.querySelector('.setup-similar-list');
 var similarHeroTemplate = document.querySelector('#similar-wizard-template').content;
 
 var getRandomElement = function (arr) {
-  var random = Math.floor(Math.random() * arr.length);
-  return arr[random];
+  return arr[Math.floor(Math.random() * arr.length)];
 };
 
 var drawHero = function (heroName, heroSurname, heroCoat, heroEyes) {
