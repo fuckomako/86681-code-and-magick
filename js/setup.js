@@ -9,21 +9,24 @@ var COAT_COLOR = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)
 var EYES_COLOR = ['black', 'red', 'blue', 'yellow', 'green'];
 
 var similarListElement = document.querySelector('.setup-similar-list');
-
 var similarHeroTemplate = document.querySelector('#similar-wizard-template').content;
+var heros = [];
 
 var getRandomElement = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
-var drawHero = function (heroName, heroSurname, heroCoat, heroEyes) {
-  var heroID = {
-    name: getRandomElement(heroName) + ' ' + getRandomElement(heroSurname),
-    coatColor: getRandomElement(heroCoat),
-    eyesColor: getRandomElement(heroEyes)
-  };
-  return heroID;
+var drawHero = function (numberOfHero) {
+  for (var i = 0; i < numberOfHero; i++) {
+    heros[i] = {
+      name: getRandomElement(HERO_NAMES) + ' ' + getRandomElement(HERO_SURNAMES),
+      coatColor: getRandomElement(COAT_COLOR),
+      eyesColor: getRandomElement(EYES_COLOR)
+    };
+  }
 };
+
+drawHero(4);
 
 var drawHeroElement = function (hero) {
   var heroElement = similarHeroTemplate.cloneNode(true);
@@ -35,7 +38,7 @@ var drawHeroElement = function (hero) {
   return heroElement;
 };
 
-var drawSimilarHeros = function (heros) {
+var drawSimilarHeros = function () {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < heros.length; i++) {
@@ -43,11 +46,6 @@ var drawSimilarHeros = function (heros) {
   }
   similarListElement.appendChild(fragment);
 };
-
-var heros = [];
-for (var i = 0; i < 4; i++) {
-  heros[i] = drawHero(HERO_NAMES, HERO_SURNAMES, COAT_COLOR, EYES_COLOR);
-}
 
 drawSimilarHeros(heros);
 document.querySelector('.setup-similar').classList.remove('hidden');
