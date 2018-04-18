@@ -99,19 +99,19 @@ var onPopupCloseEnterPress = function (evt) {
 var onWizardEyesClick = function () {
   var eyesColor = EYES_COLORS[getRandomItem(EYES_COLORS.length)];
   wizardEyes.style.fill = eyesColor;
-  popupWizardForm.querySelector('.wizard-eyes').value = eyesColor;
+  popupWizardForm.querySelector('#wizard-eyes').value = eyesColor;
 };
 
 var onFireballClick = function () {
   var fireballColor = FIREBALL_COLORS[getRandomItem(FIREBALL_COLORS.length)];
   fireballRound.style.backgroundColor = fireballColor;
-  fireballRound.querySelector('input[name=fireball-color]').value.style.backgroundColor = fireballColor;
+  fireballRound.querySelector('input[name="fireball-color"]').value.style.backgroundColor = fireballColor;
 };
 
 var onWizardCoatClick = function () {
   var coatColor = COAT_COLORS[getRandomItem(COAT_COLORS.length)];
   wizardCoat.style.fill = coatColor;
-  popupWizardForm.querySelector('input[name=coat-color]').value = coatColor;
+  popupWizardForm.querySelector('input[name="coat-color"]').value = coatColor;
 };
 
 popupOpen.addEventListener('click', function () {
