@@ -105,7 +105,7 @@ var onWizardEyesClick = function () {
 var onFireballClick = function () {
   var fireballColor = FIREBALL_COLORS[getRandomItem(FIREBALL_COLORS.length)];
   fireballRound.style.backgroundColor = fireballColor;
-  fireballRound.querySelector('input').value.style.backgroundColor = fireballColor;
+  popupWizardForm.querySelector('input[name="fireball-color"]').value = fireballColor;
 };
 
 var onWizardCoatClick = function () {
