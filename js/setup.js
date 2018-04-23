@@ -143,3 +143,46 @@ var closePopup = function () {
   fireballRound.removeEventListener('click', onFireballClick);
   wizardCoat.removeEventListener('click', onWizardCoatClick);
 };
+
+// Перетаскивание звезды в рюкзак
+
+var shopElement = document.querySelector('.setup-artifacts-shop');
+var artifactsElement = document.querySelector('.setup-artifacts');
+var draggedItem = null;
+var pasteItem = null;
+
+shopElement.addEventListener('dragstart', function (evt) {
+  if (evt.target.tagName.toLowerCase() === 'img') {
+    draggedItem = evt.target;
+    pasteItem = draggedItem.cloneNode();
+    evt.dataTransfer.setData('text/plain', evt.target.alt);
+    artifactsElement.style.outline = '2px dashed red';
+  }
+});
+
+artifactsElement.addEventListener('dragover', function (evt) {
+  evt.preventDefault();
+  return false;
+});
+artifactsElement.addEventListener('drop', function (evt) {
+  evt.target.style.backgroundColor = '';
+  artifactsElement.style.outline = 'none';
+  if (evt.target.tagName.toLowerCase() === 'div') {
+    evt.target.appendChild(pasteItem);
+  }
+  evt.preventDefault();
+});
+
+artifactsElement.addEventListener('dragenter', function (evt) {
+  evt.target.style.backgroundColor = 'yellow';
+  evt.preventDefault();
+});
+
+artifactsElement.addEventListener('dragleave', function (evt) {
+  evt.target.style.backgroundColor = '';
+  artifactsElement.style.outline = '2px dashed red';
+  if (evt.target.tagName.toLowerCase() === 'img') {
+    pasteItem = evt.target;
+  }
+  evt.preventDefault();
+});
